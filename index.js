@@ -1,12 +1,15 @@
-
-import "dotenv/config";
+import express from "express";
+import Hello from "./Hello.js";
 import Lab5 from "./Lab5/index.js";
+import cors from "cors";
+import * as db from "./Kambaz/Database/index.js";
 import UserRoutes from "./Kambaz/Users/routes.js";
-import CourseRoutes from "./Kambaz/Courses/routes.js";
-import db from "./Kambaz/Database/index.js";
+import "dotenv/config";
 import session from "express-session";
-
-
+import CourseRoutes from "./Kambaz/Courses/routes.js";
+import AssignmentsRoutes from "./Kambaz/Assignments/routes.js";
+import EnrollmentsRoutes from "./Kambaz/Enrollments/routes.js";
+import ModulesRoutes from "./Kambaz/Modules/routes.js";
 const app = express();
 app.use(
     cors({
@@ -27,15 +30,13 @@ if (process.env.SERVER_ENV !== "development") {
         domain: process.env.SERVER_URL,
     };
 }
-
 app.use(session(sessionOptions));
-
 app.use(express.json());
-
 UserRoutes(app, db);
 CourseRoutes(app, db);
-Lab5(app);
+ModulesRoutes(app, db);
+AssignmentsRoutes(app, db);
+EnrollmentsRoutes(app, db);
 Hello(app);
-
-app.listen(process.env.PORT || port);
-
+Lab5(app);
+app.listen(process.env.PORT || 4000);
