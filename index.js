@@ -10,7 +10,9 @@ import CourseRoutes from "./Kambaz/Courses/routes.js";
 import AssignmentsRoutes from "./Kambaz/Assignments/routes.js";
 import EnrollmentsRoutes from "./Kambaz/Enrollments/routes.js";
 import ModulesRoutes from "./Kambaz/Modules/routes.js";
+
 const app = express();
+
 app.use(
     cors({
         credentials: true,
@@ -30,8 +32,10 @@ if (process.env.SERVER_ENV !== "development") {
         domain: process.env.SERVER_URL,
     };
 }
+
 app.use(session(sessionOptions));
 app.use(express.json());
+
 UserRoutes(app, db);
 CourseRoutes(app, db);
 ModulesRoutes(app, db);

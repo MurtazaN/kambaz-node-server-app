@@ -30,11 +30,21 @@ export default function UserRoutes(app, db) {
         console.log("1. Request Body:", req.body);
         console.log("2. Username:", username);
         console.log("3. Password:", password);
+        // ----------------------
         const currentUser = dao.findUserByCredentials(username, password);
+
         console.log("4. Found User:", currentUser);
         if (currentUser) {
             req.session["currentUser"] = currentUser;
-            res.json(currentUser);
+            // res.json(currentUser);
+            req.session.save((err) => {
+                if (err) {
+                    console.error("Session save error:", err);
+                    res.status(500).json({ message: "Session error" });
+                } else {
+                    res.json(currentUser);
+                }
+            });
         } else {
             res.status(401).json({ message: "Unable to login. Try again later." });
         }

@@ -1,6 +1,7 @@
 import CoursesDao from "./dao.js";
 
 import EnrollmentsDao from "../Enrollments/dao.js";
+import e from "express";
 export default function CourseRoutes(app, db) {
     const dao = CoursesDao(db);
     const enrollmentsDao = EnrollmentsDao(db);
@@ -25,10 +26,13 @@ export default function CourseRoutes(app, db) {
         if (userId === "current") {
             const currentUser = req.session["currentUser"];
             if (!currentUser) {
-                res.sendStatus(401);
-                return;
+                // res.sendStatus(401);
+                console.log("No session user, using test user");
+                userId = "234"; // Bruce Wayne's id
+                // return;
+            } else {
+                userId = currentUser._id;
             }
-            userId = currentUser._id;
         }
         const courses = dao.findCoursesForEnrolledUser(userId);
         res.json(courses);
