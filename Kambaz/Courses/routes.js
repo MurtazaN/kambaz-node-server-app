@@ -1,4 +1,5 @@
 import CoursesDao from "./dao.js";
+
 import EnrollmentsDao from "../Enrollments/dao.js";
 export default function CourseRoutes(app, db) {
     const dao = CoursesDao(db);
@@ -14,6 +15,12 @@ export default function CourseRoutes(app, db) {
         res.send(courses);
     }
     const findCoursesForEnrolledUser = (req, res) => {
+        // --- ADD THESE LOGS ---
+        console.log("--- ROUTE CHECK: findCoursesForEnrolledUser ---");
+        console.log("1. Param userId:", req.params.userId);
+        console.log("2. Session User:", req.session["currentUser"]);
+        // ----------------------
+
         let { userId } = req.params;
         if (userId === "current") {
             const currentUser = req.session["currentUser"];

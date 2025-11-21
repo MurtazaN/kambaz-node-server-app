@@ -1,5 +1,17 @@
 export default [
     {
+        _id: "E4",
+        user: "123", // Iron Man's ID
+        course: "RS101",
+        enrolled: true
+    },
+    {
+        _id: "E5",
+        user: "123", // Iron Man's ID
+        course: "RS102",
+        enrolled: true
+    },
+    {
         _id: "E1",
         user: "234", // dark_knight
         course: "RS101",
