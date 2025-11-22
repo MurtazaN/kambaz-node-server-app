@@ -1,6 +1,8 @@
 import UsersDao from "./dao.js";
+import EnrollmentsDao from "../Enrollments/dao.js";
 export default function UserRoutes(app, db) {
     const dao = UsersDao(db);
+    const enrollmentsDao = EnrollmentsDao(db);
     const createUser = (req, res) => { };
     const deleteUser = (req, res) => { };
     const findAllUsers = (req, res) => { };
@@ -25,21 +27,12 @@ export default function UserRoutes(app, db) {
     };
     const signin = (req, res) => {
         const { username, password } = req.body;
-        // --- ADD THESE LOGS ---
-        console.log("--- Signin Debug ---");
-        console.log("1. Request Body:", req.body);
-        console.log("2. Username:", username);
-        console.log("3. Password:", password);
-        // ----------------------
         const currentUser = dao.findUserByCredentials(username, password);
 
-        console.log("4. Found User:", currentUser);
         if (currentUser) {
             req.session["currentUser"] = currentUser;
-            // res.json(currentUser);
             req.session.save((err) => {
                 if (err) {
-                    console.error("Session save error:", err);
                     res.status(500).json({ message: "Session error" });
                 } else {
                     res.json(currentUser);
@@ -61,6 +54,16 @@ export default function UserRoutes(app, db) {
         }
         res.json(currentUser);
     };
+    const enrollUserInCourse = (req, res) => {
+        const { userId, courseId } = req.params;
+        enrollmentsDao.enrollUserInCourse(userId, courseId);
+        res.json({ status: "ok" });
+    };
+    const unenrollUserFromCourse = (req, res) => {
+        const { userId, courseId } = req.params;
+        enrollmentsDao.unenrollUserFromCourse(userId, courseId);
+        res.json({ status: "ok" });
+    };
     app.post("/api/users", createUser);
     app.get("/api/users", findAllUsers);
     app.get("/api/users/:userId", findUserById);
@@ -70,4 +73,6 @@ export default function UserRoutes(app, db) {
     app.post("/api/users/signin", signin);
     app.post("/api/users/signout", signout);
     app.post("/api/users/profile", profile);
+    app.post("/api/users/:userId/courses/:courseId", enrollUserInCourse);
+    app.delete("/api/users/:userId/courses/:courseId", unenrollUserFromCourse);
 }
