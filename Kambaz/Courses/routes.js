@@ -26,10 +26,11 @@ export default function CourseRoutes(app, db) {
         if (userId === "current") {
             const currentUser = req.session["currentUser"];
             if (!currentUser) {
-                // res.sendStatus(401);
-                console.log("No session user, using test user");
-                userId = "234"; // Bruce Wayne's id
-                // return;
+                res.sendStatus(401);
+                return;
+                // console.log("No session user, using test user");
+                // userId = "234"; // Bruce Wayne's id
+
             } else {
                 userId = currentUser._id;
             }

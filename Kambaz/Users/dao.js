@@ -12,17 +12,8 @@ export default function UsersDao(db) {
     const findUserByUsername = (username) => db.users.find((user) => user.username === username);
     const findUserByCredentials = (username, password) => {
         if (!db.users) {
-            console.error("CRITICAL ERROR: db.users is undefined.");
             return null;
         }
-        // --- ADD THESE LOGS ---
-        console.log("DAO: Searching for user...");
-        console.log("DAO: Total users in DB:", db.users.length);
-        // Print the first user just to see if data is loaded correctly
-        if (db.users.length > 0) {
-            console.log("DAO: Sample User 0:", db.users[0].username);
-        }
-        // ----------------------
         return db.users.find((user) => user.username === username && user.password === password);
     }
     const updateUser = (userId, user) => {

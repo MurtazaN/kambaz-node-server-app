@@ -18,5 +18,8 @@ export default function EnrollmentsDao(db) {
     function findMyEnrollments(userId) {
         return db.enrollments.filter((e) => e.user === userId);
     }
-    return { enrollUserInCourse, unenrollUserFromCourse, findMyEnrollments, };
+    function findAllEnrollments() {
+        return db.enrollments;
+    }
+    return { enrollUserInCourse, unenrollUserFromCourse, findMyEnrollments, findAllEnrollments };
 }
