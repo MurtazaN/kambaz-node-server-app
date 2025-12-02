@@ -8,11 +8,27 @@ export default function UserRoutes(app) {
     const deleteUser = (req, res) => { };
 
     const findAllUsers = async (req, res) => {
+        const { role, name } = req.query;
+        if (role) {
+            const users = await dao.findUsersByRole(role);
+            res.json(users);
+            return;
+        }
+        if (name) {
+            const users = await dao.findUsersByPartialName(name);
+            res.json(users);
+            return;
+        }
         const users = await dao.findAllUsers();
         res.json(users);
     };
     app.get("/api/users", findAllUsers);
-    const findUserById = (req, res) => { };
+
+    const findUserById = async (req, res) => {
+        const user = await dao.findUserById(req.params.userId);
+        res.json(user);
+    };
+
     const updateUser = async (req, res) => {
         const userId = req.params.userId;
         const userUpdates = req.body;
