@@ -3,9 +3,10 @@ import model from "./model.js";
 
 export default function UsersDao() {
 
-    const createUser = async (user) => {
-        const newUser = { ...user, _id: uuidv4() };
-        return await model.create(newUser);
+    const createUser = (user) => {
+        // const newUser = { ...user, _id: uuidv4() };
+        // db.users.push(newUser);
+        // return newUser;
     };
     const findAllUsers = () => model.find(); //db.users;
     const findUserById = (userId) => model.findById(userId); //db.users.find((user) => user._id === userId);
