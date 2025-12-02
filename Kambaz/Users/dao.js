@@ -13,13 +13,13 @@ export default function UsersDao() {
     const findUserByUsername = (username) => model.findOne({ username: username }); //db.users.find((user) => user.username === username);
     const findUserByCredentials = (username, password) => model.findOne({ username, password });
     const findUsersByRole = (role) => model.find({ role: role }); // or just model.find({ role })
+
     const findUsersByPartialName = (partialName) => {
         const regex = new RegExp(partialName, "i"); // 'i' makes it case-insensitive
         return model.find({
             $or: [{ firstName: { $regex: regex } }, { lastName: { $regex: regex } }],
         });
     };
-
 
     const updateUser = (userId, user) => model.updateOne({ _id: userId }, { $set: user });
     const deleteUser = (userId) => model.deleteOne({ _id: userId });
