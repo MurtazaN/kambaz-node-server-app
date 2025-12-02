@@ -4,9 +4,9 @@ import model from "./model.js";
 export default function UsersDao() {
 
     const createUser = (user) => {
-        // const newUser = { ...user, _id: uuidv4() };
-        // db.users.push(newUser);
-        // return newUser;
+        const newUser = { ...user, _id: uuidv4() };
+        return model.create(newUser);
+
     };
     const findAllUsers = () => model.find();
     const findUserById = (userId) => model.findById(userId);
