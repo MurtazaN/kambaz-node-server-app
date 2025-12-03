@@ -37,7 +37,7 @@ if (process.env.SERVER_ENV !== "development") {
     sessionOptions.proxy = true;
     sessionOptions.cookie.sameSite = "none";
     sessionOptions.cookie.secure = true;
-    sessionOptions.cookie.domain = process.env.SERVER_URL;
+    // sessionOptions.cookie.domain = process.env.SERVER_URL;
 }
 
 app.use(session(sessionOptions));
