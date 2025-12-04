@@ -3,11 +3,11 @@ import model from "./model.js";
 
 export default function CoursesDao(db) {
     function findAllCourses() {
-        return model.find();
+        return model.find({}, { name: 1, description: 1 });
     }
     async function findCoursesForEnrolledUser(userId) {
         const { enrollments } = db;
-        const courses = await model.find();
+        const courses = await model.find({}, { name: 1, description: 1 });
         const enrolledCourses = courses.filter((course) =>
             enrollments.some(
                 (enrollment) =>
@@ -22,22 +22,13 @@ export default function CoursesDao(db) {
         return model.create(newCourse);
     }
     function deleteCourse(courseId) {
-        const { courses, enrollments } = db;
-        const index = courses.findIndex((c) => c._id === courseId);
-        if (index !== -1) {
-            courses.splice(index, 1);
-        }
-        for (let i = enrollments.length - 1; i >= 0; i--) {
-            if (enrollments[i].course === courseId) {
-                enrollments.splice(i, 1);
-            }
-        }
+        // const { enrollments } = db;
+        // db.enrollments = enrollments.filter((enrollment) => enrollment.course !== courseId);
+        return model.deleteOne({ _id: courseId });
     }
+
     function updateCourse(courseId, courseUpdates) {
-        const { courses } = db;
-        const course = courses.find((course) => course._id === courseId);
-        Object.assign(course, courseUpdates);
-        return course;
+        return model.updateOne({ _id: courseId }, { $set: courseUpdates });
     }
     return {
         findAllCourses,
