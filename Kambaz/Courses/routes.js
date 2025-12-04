@@ -1,26 +1,21 @@
 import CoursesDao from "./dao.js";
 
 import EnrollmentsDao from "../Enrollments/dao.js";
-import e from "express";
-export default function CourseRoutes(app, db) {
-    const dao = CoursesDao(db);
-    const enrollmentsDao = EnrollmentsDao(db);
-    const createCourse = (req, res) => {
+
+export default function CourseRoutes(app) {
+    const dao = CoursesDao();
+    const enrollmentsDao = EnrollmentsDao(); // remove db parameter
+    const createCourse = async (req, res) => {
         const currentUser = req.session["currentUser"];
-        const newCourse = dao.createCourse(req.body);
+        const newCourse = await dao.createCourse(req.body);
         enrollmentsDao.enrollUserInCourse(currentUser._id, newCourse._id);
         res.json(newCourse);
     };
-    const findAllCourses = (req, res) => {
-        const courses = dao.findAllCourses();
+    const findAllCourses = async (req, res) => {
+        const courses = await dao.findAllCourses();
         res.send(courses);
     }
-    const findCoursesForEnrolledUser = (req, res) => {
-        // --- ADD THESE LOGS ---
-        console.log("--- ROUTE CHECK: findCoursesForEnrolledUser ---");
-        console.log("1. Param userId:", req.params.userId);
-        console.log("2. Session User:", req.session["currentUser"]);
-        // ----------------------
+    const findCoursesForEnrolledUser = async (req, res) => {
 
         let { userId } = req.params;
         if (userId === "current") {
@@ -28,14 +23,11 @@ export default function CourseRoutes(app, db) {
             if (!currentUser) {
                 res.sendStatus(401);
                 return;
-                // console.log("No session user, using test user");
-                // userId = "234"; // Bruce Wayne's id
-
             } else {
                 userId = currentUser._id;
             }
         }
-        const courses = dao.findCoursesForEnrolledUser(userId);
+        const courses = await dao.findCoursesForEnrolledUser(userId);
         res.json(courses);
     };
     const deleteCourse = (req, res) => {
