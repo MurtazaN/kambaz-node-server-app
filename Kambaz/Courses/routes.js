@@ -69,10 +69,8 @@ export default function CourseRoutes(app) {
     }
 
     app.get("/api/courses/:cid/users", findUsersForCourse);
-
     app.post("/api/users/:uid/courses/:cid", enrollUserInCourse);
     app.delete("/api/users/:uid/courses/:cid", unenrollUserFromCourse);
-
     app.put("/api/courses/:courseId", updateCourse);
     app.delete("/api/courses/:courseId", deleteCourse);
     app.post("/api/users/current/courses", createCourse);
