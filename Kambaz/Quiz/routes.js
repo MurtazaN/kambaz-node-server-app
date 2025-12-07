@@ -57,9 +57,16 @@ export default function QuizzesRoutes(app) {
     };
 
     const createQuizQuestion = async (req, res) => {
-        const quizQuestions = req.body;
-        const quiz = await quizDao.createQuizQuestion(quizQuestions);
-        res.send(quiz);
+        const { quizId } = req.params;
+        const quizQuestion = req.body;
+
+        // Add quizId from params if not already present
+        if (!quizQuestion.quizId) {
+            quizQuestion.quizId = quizId;
+        }
+
+        const question = await quizDao.createQuizQuestion(quizQuestion);
+        res.send(question);
     };
 
     const updateQuizQuestion = async (req, res) => {

@@ -64,6 +64,17 @@ export async function deleteQuizQuestion(questionId) {
 }
 
 export async function createQuizQuestion(quizData) {
+    // If quizData is a single question object (not wrapped in questions array)
+    if (!quizData.questions) {
+        try {
+            const saved = await quizQuestionModel.create(quizData);
+            return saved;
+        } catch (err) {
+            throw new Error(err.message);
+        }
+    }
+    
+    // Handle array of questions
     const results = [];
     const quizQuestions = quizData.questions;
     for (const question of quizQuestions) {
