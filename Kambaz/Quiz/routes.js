@@ -66,8 +66,6 @@ export default function QuizzesRoutes(app) {
         const { questionId, quizId } = req.params;
         const quizQuestion = req.body.quizData;
         const totalPoints = req.body.points;
-        console.log(req.body);
-        console.log("quizQuestion", quizQuestion);
         const status = await quizDao.updateQuizQuestion(questionId, quizId, quizQuestion, totalPoints);
         res.send(status);
     };
@@ -112,14 +110,9 @@ export default function QuizzesRoutes(app) {
     };
 
     const findQuizResultForUser = async (req, res) => {
-        console.log("quizId", req.params.quizId);
-        console.log("userId", req.params.userId);
         try {
             const { quizId, userId } = req.params;
-            console.log("quizId in routes", quizId);
-            console.log("userId in routes", userId);
             const result = await quizDao.findQuizResultForUser(userId, quizId);
-            console.log("result", result);
             if (!result) {
                 return res.status(404).json({ error: "Result not found" });
             }
@@ -158,4 +151,50 @@ export default function QuizzesRoutes(app) {
     app.post("/api/quiz-results", saveQuizResult);
     app.get("/api/quiz-results/:quizId/:userId", findQuizResultForUser);
     app.post("/api/admin/cleanup-quiz-results", cleanupDuplicateResults);
+
+    // Attempts API (alternate endpoints for quiz results)
+    app.get("/api/attempts/user/:userId/quiz/:quizId", async (req, res) => {
+        try {
+            const { userId, quizId } = req.params;
+            const result = await quizDao.findQuizResultForUser(userId, quizId);
+            if (!result) {
+                return res.status(404).json({ error: "No attempts found" });
+            }
+            res.json(result);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    });
+    app.post("/api/attempts/quiz/:quizId/start", async (req, res) => {
+        try {
+            const { quizId } = req.params;
+            const userId = req.session?.currentUser?._id;
+            if (!userId) {
+                return res.status(401).json({ error: "Not authenticated" });
+            }
+            // Return empty attempt for now - can be enhanced later
+            res.json({ quizId, userId, startedAt: new Date().toISOString() });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    });
+    app.post("/api/attempts/:attemptId/submit", async (req, res) => {
+        try {
+            const { attemptId } = req.params;
+            const { answers } = req.body;
+            // For now, just acknowledge the submission
+            res.json({ attemptId, answers, submittedAt: new Date().toISOString() });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    });
+    app.get("/api/attempts/:attemptId", async (req, res) => {
+        try {
+            const { attemptId } = req.params;
+            // Return attempt details
+            res.json({ _id: attemptId, status: "completed" });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    });
 }

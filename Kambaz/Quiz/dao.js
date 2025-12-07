@@ -5,7 +5,6 @@ export async function getQuizzesForCourse(courseId) {
     return await model.find({ courseCode: courseId });
 }
 export async function createQuiz(quiz) {
-    console.log("Creating quiz:", quiz);
     return await model.create(quiz);
 }
 
@@ -44,8 +43,6 @@ export async function updateQuizQuestion(questionId, quizId, quizQuestion, total
             quizUpdatePromise
         ]);
 
-        console.log("Question Update:", questionUpdate);
-
         return {
             questionUpdate,
             quizUpdate,
@@ -54,7 +51,6 @@ export async function updateQuizQuestion(questionId, quizId, quizQuestion, total
         };
 
     } catch (error) {
-        console.error("Error updating quiz and question:", error);
         return {
             success: false,
             error: error.message,
@@ -70,13 +66,11 @@ export async function deleteQuizQuestion(questionId) {
 export async function createQuizQuestion(quizData) {
     const results = [];
     const quizQuestions = quizData.questions;
-    console.log("Quiz Questions:", quizQuestions);
     for (const question of quizQuestions) {
         try {
             const saved = await quizQuestionModel.create(question);
             results.push(saved);
         } catch (err) {
-            console.error(`Failed to save question: ${question.question}`, err);
             results.push({ error: err.message, question });
         }
     }
@@ -85,9 +79,8 @@ export async function createQuizQuestion(quizData) {
 
 export async function findQuizQuestions(quizId) {
     try {
-        return await quizQuestionModel.find({ quizId });
+        return await quizQuestionModel.find({ quizId: quizId });
     } catch (error) {
-        console.error("Error finding quiz questions:", error.message);
         throw error;
     }
 }
@@ -96,7 +89,6 @@ export async function findQuizQuestionById(questionId) {
     try {
         return await quizQuestionModel.findById(questionId);
     } catch (error) {
-        console.error("Error finding quiz question:", error.message);
         throw error;
     }
 }
@@ -140,18 +132,14 @@ export async function saveQuizResult(quizResult) {
             });
         }
     } catch (error) {
-        console.error("Error saving quiz result:", error.message);
         throw error;
     }
 }
 
 export async function findQuizResultForUser(userID, quizID) {
     try {
-        console.log("Finding quiz id:", quizID);
-        console.log("Finding user id :", userID);
         return await quizResultModel.findOne({ userId: userID, quizId: quizID });
     } catch (error) {
-        console.error("Error finding quiz result:", error.message);
         throw error;
     }
 }
@@ -191,7 +179,6 @@ export async function cleanupDuplicateResults() {
 
         return { removed };
     } catch (error) {
-        console.error("Error cleaning up duplicate results:", error.message);
         throw error;
     }
 }
