@@ -132,11 +132,10 @@ export default function QuizzesRoutes(app) {
     app.put("/api/quizzes/:quizId/update", updateQuiz);
     app.put("/api/quizzes/:quizId/status", publishOrUnpublishQuiz);
     app.get("/api/quizzes/:quizId", getQuizById);
-    app.get("/api/quizzes/:quizId/questions", getQuizQuestions);
+    app.get("/api/quizzes/:quizId/questions", findQuizQuestions);
     app.post("/api/quizzes/:quizId/questions/create", createQuizQuestion);
     app.put("/api/quizzes/:quizId/questions/:questionId/update", updateQuizQuestion);
     app.delete("/api/quizzes/:quizId/questions/:questionId/delete", deleteQuizQuestion);
-    app.get("/api/quizzes/:quizId/questions", findQuizQuestions);
     app.get("/api/quiz-questions/:questionId", findQuizQuestionById);
     app.post("/api/quiz-results", saveQuizResult);
     app.get("/api/quiz-results/:quizId/:userId", findQuizResultForUser);

@@ -94,7 +94,7 @@ export async function findQuizQuestions(quizId) {
 
 export async function findQuizQuestionById(questionId) {
     try {
-        return await QuizQuestionModel.findById(questionId);
+        return await quizQuestionModel.findById(questionId);
     } catch (error) {
         console.error("Error finding quiz question:", error.message);
         throw error;

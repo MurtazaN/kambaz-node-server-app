@@ -2,43 +2,51 @@ import mongoose from "mongoose";
 
 const quizQuestionSchema = new mongoose.Schema(
     {
-        _id: {
-            type: String,
-            auto: true,
-        },
         quizId: {
             type: String,
             ref: "quizzes",
             required: true,
         },
-        quizType: {
+        title: {
             type: String,
-            enum: ["Multiple Choice Question", "Fill in the Blank", "True or False"],
             required: true,
+        },
+        type: {
+            type: String,
+            enum: ["Multiple Choice", "True/False", "Fill in the Blank"],
+            default: "Multiple Choice",
+            required: true,
+        },
+        points: {
+            type: Number,
+            required: true,
+            min: 0,
+            default: 0,
         },
         question: {
             type: String,
             required: true,
         },
-        answer: {
-            type: mongoose.Schema.Types.Mixed,
-            required: true,
-        },
+        // For Multiple Choice: array of choice objects
+        choices: [
+            {
+                text: { type: String, required: true },
+                isCorrect: { type: Boolean, default: false },
+            },
+        ],
+        // For True/False: single boolean
         correctAnswer: {
             type: mongoose.Schema.Types.Mixed,
-            required: true,
         },
-        point: {
-            type: Number,
-            required: true,
-            min: 0,
-        },
-        quizLevel: {
-            type: String,
-            enum: ["Easy Level", "Medium Level", "Hard Level"],
-        },
+        // For Fill in the Blank: array of possible correct answers
+        possibleAnswers: [
+            {
+                text: { type: String },
+                caseSensitive: { type: Boolean, default: false },
+            },
+        ],
     },
-    { collection: "quizquestions" }
+    { collection: "quizquestions", timestamps: true }
 );
 
 export default quizQuestionSchema;
