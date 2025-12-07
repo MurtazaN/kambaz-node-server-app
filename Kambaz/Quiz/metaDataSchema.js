@@ -2,37 +2,34 @@ import mongoose from "mongoose";
 
 const MetaDataschema = new mongoose.Schema(
     {
-        _id: String,//
-        title: String,//
-        description: String,//
+        title: { type: String, required: true },
+        description: { type: String, default: "" },
         availableDate: Date,
         dueDate: Date,
         untilDate: Date,
-        courseCode: { type: String, ref: "CourseModel" },//
+        courseCode: { type: String, ref: "CourseModel", required: true },
         quizType: {
             type: String,
-            enum: ["Practice Quiz", "Ungraded Survey", "Graded Quiz", "Graded Survey"],
+            enum: ["Graded Quiz", "Practice Quiz", "Graded Survey", "Ungraded Survey"],
             default: "Graded Quiz",
-        }, //
-        assignmentGroup: String, //
-        shuffleAnswers: { type: Boolean, default: false }, //
-        timeLimit: { type: Number, min: 0 },
-        multipleAttempts: { type: Number },
-        showCorrectAnswers: String,
-        accessCode: { type: String, default: "" }, //
-        oneQuestionAtATime: { type: Boolean, default: false }, //
-        webcamRequired: { type: Boolean, default: false }, //
-        lockQuestionsAfterAnswering: { type: Boolean, default: false }, //
-        totalPoints: { type: Number, min: 0 },
-        status: {
+        },
+        assignmentGroup: {
             type: String,
-            enum: ["publish", "unpublish"],
-            default: "unpublish",
-        },//
+            enum: ["Quizzes", "Exams", "Assignments", "Project"],
+            default: "Quizzes",
+        },
+        shuffleAnswers: { type: Boolean, default: true },
+        timeLimit: { type: Number, min: 0, default: 20 },
+        multipleAttempts: { type: Boolean, default: false },
+        showCorrectAnswers: { type: String, default: "" },
+        accessCode: { type: String, default: "" },
+        oneQuestionAtATime: { type: Boolean, default: true },
+        webcamRequired: { type: Boolean, default: false },
+        lockQuestionsAfterAnswering: { type: Boolean, default: false },
+        totalPoints: { type: Number, min: 0, default: 0 },
+        published: { type: Boolean, default: false },
     },
-    { collection: "quizzes" }
+    { collection: "quizzes", timestamps: true }
 );
-
-
 
 export default MetaDataschema;
