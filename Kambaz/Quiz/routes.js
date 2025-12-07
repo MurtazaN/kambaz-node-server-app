@@ -127,6 +127,7 @@ export default function QuizzesRoutes(app) {
     };
 
     app.get("/api/courses/:courseId/quizzes", getQuizzesForCourse);
+    app.get("/api/quizzes/course/:courseId", getQuizzesForCourse); // Alternative route because of frontend
     app.post("/api/courses/:courseId/quizzes/create", createQuiz);
     app.delete("/api/quizzes/:quizId/delete", deleteQuiz);
     app.put("/api/quizzes/:quizId/update", updateQuiz);
