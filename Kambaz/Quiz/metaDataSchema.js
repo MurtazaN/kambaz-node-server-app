@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const MetaDataschema = new mongoose.Schema(
     {
+        _id: String,
         title: { type: String, required: true },
         description: { type: String, default: "" },
         availableDate: Date,

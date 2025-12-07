@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const quizResultSchema = new mongoose.Schema(
     {
+        _id: String,
         quizId: {
             type: String,
             ref: "quizzes",

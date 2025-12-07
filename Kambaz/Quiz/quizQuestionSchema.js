@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const quizQuestionSchema = new mongoose.Schema(
     {
+        _id: String,
         quizId: {
             type: String,
             ref: "quizzes",
@@ -27,18 +28,18 @@ const quizQuestionSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        // For Multiple Choice: array of choice objects
+        //multiple Choice: array of choice objects
         choices: [
             {
                 text: { type: String, required: true },
                 isCorrect: { type: Boolean, default: false },
             },
         ],
-        // For True/False: single boolean
+        //True/False: single boolean
         correctAnswer: {
             type: mongoose.Schema.Types.Mixed,
         },
-        // For Fill in the Blank: array of possible correct answers
+        //fill in the Blank: array of possible correct answers
         possibleAnswers: [
             {
                 text: { type: String },

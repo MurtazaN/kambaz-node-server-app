@@ -32,6 +32,18 @@ export default function QuizzesRoutes(app) {
         res.send(status);
     };
 
+    const publishQuiz = async (req, res) => {
+        const { quizId } = req.params;
+        const status = await quizDao.publishOrUnpublishQuiz(quizId, true);
+        res.send(status);
+    };
+
+    const unpublishQuiz = async (req, res) => {
+        const { quizId } = req.params;
+        const status = await quizDao.publishOrUnpublishQuiz(quizId, false);
+        res.send(status);
+    };
+
     const getQuizById = async (req, res) => {
         const { quizId } = req.params;
         const quiz = await quizDao.searchById(quizId);
@@ -126,18 +138,23 @@ export default function QuizzesRoutes(app) {
         }
     };
 
-    app.get("/api/courses/:courseId/quizzes", getQuizzesForCourse);
-    app.get("/api/quizzes/course/:courseId", getQuizzesForCourse); // Alternative route because of frontend
-    app.post("/api/courses/:courseId/quizzes/create", createQuiz);
-    app.delete("/api/quizzes/:quizId/delete", deleteQuiz);
-    app.put("/api/quizzes/:quizId/update", updateQuiz);
-    app.put("/api/quizzes/:quizId/status", publishOrUnpublishQuiz);
+    // Quiz routes
+    app.get("/api/quizzes/course/:courseId", getQuizzesForCourse);
+    app.post("/api/quizzes/course/:courseId", createQuiz);
     app.get("/api/quizzes/:quizId", getQuizById);
+    app.put("/api/quizzes/:quizId", updateQuiz);
+    app.delete("/api/quizzes/:quizId", deleteQuiz);
+    app.post("/api/quizzes/:quizId/publish", publishQuiz);
+    app.post("/api/quizzes/:quizId/unpublish", unpublishQuiz);
+
+    // Question routes
     app.get("/api/quizzes/:quizId/questions", findQuizQuestions);
-    app.post("/api/quizzes/:quizId/questions/create", createQuizQuestion);
-    app.put("/api/quizzes/:quizId/questions/:questionId/update", updateQuizQuestion);
-    app.delete("/api/quizzes/:quizId/questions/:questionId/delete", deleteQuizQuestion);
-    app.get("/api/quiz-questions/:questionId", findQuizQuestionById);
+    app.post("/api/quizzes/:quizId/questions", createQuizQuestion);
+    app.get("/api/questions/:questionId", findQuizQuestionById);
+    app.put("/api/questions/:questionId", updateQuizQuestion);
+    app.delete("/api/questions/:questionId", deleteQuizQuestion);
+
+    // Quiz results/attempts routes
     app.post("/api/quiz-results", saveQuizResult);
     app.get("/api/quiz-results/:quizId/:userId", findQuizResultForUser);
     app.post("/api/admin/cleanup-quiz-results", cleanupDuplicateResults);

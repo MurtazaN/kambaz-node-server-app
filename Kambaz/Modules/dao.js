@@ -5,8 +5,6 @@ export default function ModulesDao(db) {
     async function findModulesForCourse(courseId) {
         const course = await model.findById(courseId);
         return course.modules;
-        // const { modules } = db;
-        // return modules.filter((module) => module.course === courseId);
     }
     async function createModule(courseId, module) {
         const newModule = { ...module, _id: uuidv4() };
