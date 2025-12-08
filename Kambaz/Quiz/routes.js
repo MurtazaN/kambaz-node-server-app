@@ -70,10 +70,11 @@ export default function QuizzesRoutes(app) {
     };
 
     const updateQuizQuestion = async (req, res) => {
-        const { questionId, quizId } = req.params;
-        const quizQuestion = req.body.quizData;
-        const totalPoints = req.body.points;
-        const status = await quizDao.updateQuizQuestion(questionId, quizId, quizQuestion, totalPoints);
+        const { questionId } = req.params;
+        const question = req.body;
+        const quizId = question.quizId;
+        const totalPoints = { totalPoints: question.points };
+        const status = await quizDao.updateQuizQuestion(questionId, quizId, question, totalPoints);
         res.send(status);
     };
 
@@ -163,11 +164,11 @@ export default function QuizzesRoutes(app) {
     app.get("/api/attempts/user/:userId/quiz/:quizId", async (req, res) => {
         try {
             const { userId, quizId } = req.params;
-            const result = await quizDao.findQuizResultForUser(userId, quizId);
-            if (!result) {
-                return res.status(404).json({ error: "No attempts found" });
+            const results = await quizDao.findAllQuizResultsForUser(userId, quizId);
+            if (!results || results.length === 0) {
+                return res.json([]);
             }
-            res.json(result);
+            res.json(results);
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
@@ -175,12 +176,11 @@ export default function QuizzesRoutes(app) {
     app.post("/api/attempts/quiz/:quizId/start", async (req, res) => {
         try {
             const { quizId } = req.params;
-            const userId = req.session?.currentUser?._id;
-            if (!userId) {
-                return res.status(401).json({ error: "Not authenticated" });
-            }
-            // Return empty attempt for now - can be enhanced later
-            res.json({ quizId, userId, startedAt: new Date().toISOString() });
+            const attemptData = req.body;
+            
+            // Save the quiz result/attempt
+            const savedAttempt = await quizDao.saveQuizResult(attemptData);
+            res.json(savedAttempt);
         } catch (error) {
             res.status(500).json({ error: error.message });
         }

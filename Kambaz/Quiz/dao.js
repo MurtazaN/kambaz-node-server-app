@@ -73,7 +73,7 @@ export async function createQuizQuestion(quizData) {
             throw new Error(err.message);
         }
     }
-    
+
     // Handle array of questions
     const results = [];
     const quizQuestions = quizData.questions;
@@ -150,6 +150,14 @@ export async function saveQuizResult(quizResult) {
 export async function findQuizResultForUser(userID, quizID) {
     try {
         return await quizResultModel.findOne({ userId: userID, quizId: quizID });
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function findAllQuizResultsForUser(userID, quizID) {
+    try {
+        return await quizResultModel.find({ userId: userID, quizId: quizID });
     } catch (error) {
         throw error;
     }

@@ -22,6 +22,7 @@ const MetaDataschema = new mongoose.Schema(
         shuffleAnswers: { type: Boolean, default: true },
         timeLimit: { type: Number, min: 0, default: 20 },
         multipleAttempts: { type: Boolean, default: false },
+        howManyAttempts: { type: Number, min: 1, default: 1 },
         showCorrectAnswers: { type: String, default: "" },
         accessCode: { type: String, default: "" },
         oneQuestionAtATime: { type: Boolean, default: true },
