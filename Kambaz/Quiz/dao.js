@@ -106,42 +106,27 @@ export async function findQuizQuestionById(questionId) {
 
 export async function saveQuizResult(quizResult) {
     try {
-        if (!quizResult._id) {
-            quizResult._id = uuidv4();
-        }
-
-        const quizData = await searchById(quizResult.quizId);
-        const maxAttempts = quizData.howManyAttempts || 1;
-
-        const existingResult = await quizResultModel.findOne({
+        // Get existing attempts count
+        const existingResults = await quizResultModel.find({
             userId: quizResult.userId,
             quizId: quizResult.quizId
         });
 
-        const isFinalAttempt = (quizResult.attemptNumber >= maxAttempts);
+        const attemptNumber = existingResults.length + 1;
+
+        const quizData = await searchById(quizResult.quizId);
+        const maxAttempts = quizData.howManyAttempts || 1;
+        const isFinalAttempt = (attemptNumber >= maxAttempts);
         const submittedStatus = isFinalAttempt;
 
-        if (existingResult) {
-            return await quizResultModel.findByIdAndUpdate(
-                existingResult._id,
-                {
-                    ...quizResult,
-                    _id: existingResult._id,
-                    submittedAt: new Date(),
-                    submitted: submittedStatus,
-                    attemptNumber: existingResult.attemptNumber + 1
-                },
-                { new: true }
-            );
-        } else {
-            return await quizResultModel.create({
-                ...quizResult,
-                _id: uuidv4(),
-                submittedAt: new Date(),
-                submitted: submittedStatus,
-                attemptNumber: 1
-            });
-        }
+        // Always create a NEW attempt document
+        return await quizResultModel.create({
+            ...quizResult,
+            _id: uuidv4(),
+            submittedAt: new Date(),
+            submitted: submittedStatus,
+            attemptNumber: attemptNumber
+        });
     } catch (error) {
         throw error;
     }
