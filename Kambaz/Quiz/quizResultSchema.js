@@ -20,7 +20,7 @@ const quizResultSchema = new mongoose.Schema(
         },
         answers: [
             {
-                questionId: { type: mongoose.Schema.Types.ObjectId, required: true },
+                questionId: { type: String, required: true },
                 answer: { type: mongoose.Schema.Types.Mixed },
                 isCorrect: { type: Boolean },
                 pointsEarned: { type: Number, default: 0 },

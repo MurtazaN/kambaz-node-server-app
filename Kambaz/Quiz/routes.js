@@ -177,7 +177,7 @@ export default function QuizzesRoutes(app) {
         try {
             const { quizId } = req.params;
             const attemptData = req.body;
-            
+
             // Save the quiz result/attempt
             const savedAttempt = await quizDao.saveQuizResult(attemptData);
             res.json(savedAttempt);

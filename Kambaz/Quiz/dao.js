@@ -111,7 +111,7 @@ export async function saveQuizResult(quizResult) {
         }
 
         const quizData = await searchById(quizResult.quizId);
-        const maxAttempts = quizData.multipleAttempts || 1;
+        const maxAttempts = quizData.howManyAttempts || 1;
 
         const existingResult = await quizResultModel.findOne({
             userId: quizResult.userId,
